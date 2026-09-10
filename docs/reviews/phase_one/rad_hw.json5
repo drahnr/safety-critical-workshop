@@ -23,14 +23,19 @@
                     The RAD firmware was flashed using 'just rad-run'.\
                     \
                     This was verified by using `just sim-manual` to manually control the RAD,\
-                    switching from 'idle' to 'production' and back.\
+                    switching from 'idle' to 'production' and back to 'idle'.\
                     \
-                    Following the sequence:\
-                    1. Pressing Btn1, Btn2, Btn3 -> moves to 'operation' mode\
-                    2. Pressing Btn4 -> active radiation\
-                    3. Pressing Btn1 -> signal stop\
-                    4. Pressing Btn4 -> deactivate radiation\
-                    5. Observing RAD is back in 'idle' mode\
+                    Following the sequence on the simulator device:\
+                    1. LEDs for simulation and RAD device are 'off'\
+                    2. Bring RAD to 'operation' mode\
+                       2.1. Press sim BUTTON2 (door sensor) => RAD device LED2 turns on (door closed)\
+                       2.2. Press sim BUTTON3 (environment confirmation) => RAD device LED3 turns on (safe environment confirmed)\
+                       2.3. Press sim BUTTON1 (start) => RAD device LED1 turns on (RAD in 'operation' mode)\
+                       2.4. RAD device LED4 turns on (radiation relay activated)\
+                    3. Press sim BUTTON4 (radiation active) => RAD in 'operation' with active radiation\
+                    4. Press sim BUTTON1 (stop) => RAD device LED4 turns off (radiation relay deactivated)\
+                    5. Press sim BUTTON4 (radiation deactive) => RAD device LED1 turns off (RAD in 'idle' mode)\
+                    6. Completed full RAD start-stop flow\
                     "
                 },
             ],
