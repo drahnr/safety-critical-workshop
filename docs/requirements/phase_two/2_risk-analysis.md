@@ -1,9 +1,3 @@
----
-properties: {
-    kind: "risk",
-}
----
-
 # *RAD* Risk Analysis Improvements Phase 2
 
 This section adds risk analysis parts to apply everything learned during the workshop.

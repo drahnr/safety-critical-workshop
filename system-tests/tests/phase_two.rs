@@ -4,7 +4,7 @@ use mantra_macros::assert_req;
 use system_tests::{BINARY_DIR, init};
 
 #[cfg(feature = "phase-two")]
-//#[req_verified("rad.sw.limit-radiation")]
+#[mantra_macros::req_verified("rad.sw.limit-radiation")]
 #[embsinth::test]
 fn radiation_limit() {
     let (mut rad_connection, mut sim_connection) = init(&BINARY_DIR.join("limit_radiation"));

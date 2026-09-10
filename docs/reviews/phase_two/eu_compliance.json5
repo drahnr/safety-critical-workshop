@@ -1,0 +1,28 @@
+{
+    reviews: [
+        {
+            name: "EU Compliance",
+            utc_date: "2026-08-05T17:00utc-01",
+            authors: [
+                "Manuel"
+            ],
+            revisions: [
+                {
+                    nr: 1,
+                    authors: [
+                        "Manuel"
+                    ],
+                    comment: "Initial review"
+                }
+            ],
+            requirements: [
+                {
+                    id: "goal.EU-MDR-compliant",
+                    comment: "\
+                    For this demo, we ignore compliancy rules for simplicity.\
+                    "
+                }
+            ],
+        }
+    ]
+}

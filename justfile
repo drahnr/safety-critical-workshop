@@ -80,7 +80,7 @@ rad-system-tests phase='base':
     just sim-build-invariant-check
     just sim-build-limit-radiation
     # "-j=1" is important for cargo-nextest, because it otherwise uses multiply processes to run tests in parallel
-    RUST_LOG=probe_rs=warn,tracing=warn,info cargo nextest run -j=1 --target=host-tuple {{ if phase == "phase-one" { "--features=phase-one" } else if phase == "phase-two" { "--features=phase-two" } else { "" } }}
+    - RUST_LOG=probe_rs=warn,tracing=warn,info cargo nextest run -j=1 --target=host-tuple {{ if phase == "phase-one" { "--features=phase-one" } else if phase == "phase-two" { "--features=phase-two" } else { "" } }}
     just post-process
 
 post-process tests='system-tests':

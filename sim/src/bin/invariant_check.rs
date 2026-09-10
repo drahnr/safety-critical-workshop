@@ -18,7 +18,7 @@ fn main() -> ! {
     sim.wait(UPDATE_DELAY);
 
     defmt::info!("Breaking RAD invariant");
-    sim.set_environment_confirmation(sim::OutputState::Off);
+    sim.set_door_sensor(sim::OutputState::Off);
     sim.wait_update();
 
     // RAD stays in 'operation' until radiation is deactivated
