@@ -41,6 +41,12 @@ Once Lima and Docker are installed, try building the Dockerfile of this reposito
 For Windows users, Docker should be configured to use WSL 2 as documented in the official [docker documentation](https://docs.docker.com/desktop/features/wsl/).
 Once Docker is installed, try building the Dockerfile of this repository as described in section [QEMU Docker Container](#qemu-docker-container).
 
+To execute commands via [just](https://just.systems), replace the `justfile` with `windows.justfile`.
+This file is configured to run commands via powershell.
+
+**Note:** If you get errors executing for example `just rad-unit-tests`, try to remove the `#!powershell` line at the top of the task.
+There seems to be an inconsistent handling of environmental variables with just on Windows.
+
 ## Facade Target Setup
 
 Ferrocene's [Facade targets](https://public-docs.ferrocene.dev/main/user-manual/rustc/testing-facades.html)
