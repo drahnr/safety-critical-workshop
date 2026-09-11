@@ -67,9 +67,12 @@ rad-build features='hw':
 profraw-file := justfile_directory() + "/target/nextest/default/raw-coverage/profdata-%p-%m.profraw"
 
 rad-unit-tests:
+    #!powershell
     if (Test-Path target/nextest/default) { Remove-Item -Recurse -Force target/nextest/default }
     New-Item -ItemType Directory -Force -Path target/nextest/default/coverage | Out-Null
-    $env:RUSTFLAGS = "-Cinstrument-coverage"; $env:LLVM_PROFILE_FILE = "{{ profraw-file }}"; cargo nextest run -p rad --lib --target=thumbv7em-ferrocene.facade-eabi --no-default-features; $LASTEXITCODE = 0
+    $env:RUSTFLAGS = "-Cinstrument-coverage"
+    $env:LLVM_PROFILE_FILE = "{{ profraw-file }}"
+    cargo nextest run -p rad --lib --target=thumbv7em-ferrocene.facade-eabi --no-default-features; $LASTEXITCODE = 0
     # $LASTEXITCODE = 0 set so code coverage is gathered even if tests failed
     grcov . -s . --binary-path ./target -t html -t cobertura-pretty --ignore-not-existing -o ./target/nextest/default/coverage/ --ignore='/**/' --ignore='target/'
 
@@ -77,6 +80,7 @@ export EMBSINTH_OUT_DIR := justfile_directory() + "/target"
 
 [working-directory("system-tests")]
 rad-system-tests phase='base':
+    #!powershell
     if (Test-Path "$env:EMBSINTH_OUT_DIR/system-tests") { Remove-Item -Recurse -Force "$env:EMBSINTH_OUT_DIR/system-tests" }
     just rad-build {{ if phase == "phase-one" { "hw-auto-testing,phase-one" } else if phase == "phase-two" { "hw-auto-testing,phase-two" } else { "hw-auto-testing" } }}
     just sim-build-reset
@@ -85,7 +89,8 @@ rad-system-tests phase='base':
     just sim-build-limit-radiation
     # "-j=1" is important for cargo-nextest, because it otherwise uses multiple processes to run tests in parallel
     # $LASTEXITCODE = 0 set so 'just post-process' is called even if tests failed
-    $env:RUST_LOG = "probe_rs=warn,tracing=warn,info"; cargo nextest run -j=1 --target=host-tuple {{ if phase == "phase-one" { "--features=phase-one" } else if phase == "phase-two" { "--features=phase-two" } else { "" } }}; $LASTEXITCODE = 0
+    $env:RUST_LOG = "probe_rs=warn,tracing=warn,info"
+    cargo nextest run -j=1 --target=host-tuple {{ if phase == "phase-one" { "--features=phase-one" } else if phase == "phase-two" { "--features=phase-two" } else { "" } }}; $LASTEXITCODE = 0
     just post-process
 
 post-process tests='system-tests':
