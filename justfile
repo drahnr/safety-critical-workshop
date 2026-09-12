@@ -85,3 +85,14 @@ rad-system-tests phase='base':
 
 post-process tests='system-tests':
     embsinth post-process --out $EMBSINTH_OUT_DIR/{{ tests }}/mantra_test_run.json --test-run-name {{ tests }} $EMBSINTH_OUT_DIR/
+
+[working-directory("system-tests")]
+hw-setup-test:
+    rm -rf $EMBSINTH_OUT_DIR/system-tests
+    just rad-build hw-auto-testing
+    just sim-build-reset
+    just sim-build-start-stop
+    just sim-build-invariant-check
+    just sim-build-limit-radiation
+    # "-j=1" is important for cargo-nextest, because it otherwise uses multiply processes to run tests in parallel
+    RUST_LOG=probe_rs=warn,tracing=warn,info cargo nextest run -j=1 --target=host-tuple

@@ -95,3 +95,17 @@ rad-system-tests phase='base':
 
 post-process tests='system-tests':
     embsinth post-process --out "$env:EMBSINTH_OUT_DIR/{{ tests }}/mantra_test_run.json" --test-run-name {{ tests }} "$env:EMBSINTH_OUT_DIR/{{ tests }}"
+
+[working-directory("system-tests")]
+hw-setup-test:
+    #!powershell
+    if (Test-Path "$env:EMBSINTH_OUT_DIR/system-tests") { Remove-Item -Recurse -Force "$env:EMBSINTH_OUT_DIR/system-tests" }
+    just rad-build hw-auto-testing
+    just sim-build-reset
+    just sim-build-start-stop
+    just sim-build-invariant-check
+    just sim-build-limit-radiation
+    # "-j=1" is important for cargo-nextest, because it otherwise uses multiple processes to run tests in parallel
+    # $LASTEXITCODE = 0 set so 'just post-process' is called even if tests failed
+    $env:RUST_LOG = "probe_rs=warn,tracing=warn,info"
+    cargo nextest run -j=1 --target=host-tuple
