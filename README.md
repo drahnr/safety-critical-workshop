@@ -41,7 +41,12 @@ Once Lima and Docker are installed, try building the Dockerfile of this reposito
 For Windows users, Docker should be configured to use WSL 2 as documented in the official [docker documentation](https://docs.docker.com/desktop/features/wsl/).
 Once Docker is installed, try building the Dockerfile of this repository as described in section [QEMU Docker Container](#qemu-docker-container).
 
-To execute commands via [just](https://just.systems), replace the `justfile` with `windows.justfile`.
+To execute commands via [just](https://just.systems), replace the `justfile` with `windows.justfile`:
+
+```console
+> just --justfile windows.just
+```
+
 This file is configured to run commands via powershell.
 
 **Note:** If you get errors executing for example `just rad-unit-tests`, try to remove the `#!powershell` line at the top of the task.
@@ -104,7 +109,7 @@ This will run all unit tests and collect code coverage data.
 
 For manual and system testing, two NRF 52840 DK devices must be connected to your host machine.
 
-Related Datasheets from Nordic:
+Related data sheets from Nordic:
 
 - [nRF52840 DK Hardware](https://docs.nordicsemi.com/r/bundle/ug_nrf52840_dk/page/ug/dk/intro.html)
 - [nRF52840 Product Specification](https://docs.nordicsemi.com/r/bundle/ps_nrf52840/page/keyfeatures_html5.html)
@@ -118,6 +123,10 @@ Mapping is done in a way that makes it easy to use two 4-pin male-to-male cables
 **Note:** Not all 8 pins are used, but using two 4-pin cables makes connecting the two boards easier.
 
 ### I/O Mapping
+
+The RAD device displays the state of its input using its 4 LEDs and the SIM device can be used to control its output using its 4 push buttons as shown here (note, that both are combined in a single image here):
+
+![nRF 52840 DK I/O mapping](assets/images/dk-labels.png)
 
 The following lists show how the I/O pins, LEDs and buttons of the two boards are connected.
 
@@ -145,7 +154,7 @@ The following lists show how the I/O pins, LEDs and buttons of the two boards ar
     - High: Unconfirmed
   - p1.08: Radiation Sensor
     - Low: Active
-    - High: Deactive
+    - High: Inactive
 - LEDS
   - 1: Mode Indicator (ON = Operation)
   - 2: Door Sensor (ON = Closed)
@@ -166,7 +175,7 @@ The following lists show how the I/O pins, LEDs and buttons of the two boards ar
     - High: Unconfirmed
   - p1.04: Radiation
     - Low: Active
-    - High: Deactive
+    - High: Inactive
 - Inputs
   - p1.05: Radiation Relay
     - Low: On
@@ -210,7 +219,7 @@ The following debug probes were found:
 The output ID per probe is: `<vendor ID>:<probe ID>:<serial number>`
 
 Since vendor and probe ID should be the same for all DK devices,
-only the serial numbers for the **RAD** and **SIM** devives must be replaced in:
+only the serial numbers for the **RAD** and **SIM** devices must be replaced in:
 
 - `rad/.cargo/config.toml` using the number of the **RAD**
 - `sim/.cargo/config.toml` using the number of the **SIM**
