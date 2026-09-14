@@ -7,7 +7,7 @@ This repository contains the accompanying demo for the [Safety-Critical Rust Dev
 **The following tools must be installed:**
 
 - Install [criticalup](https://criticalup.ferrocene.dev/install.html)
-- Docker installed and usable (see OS specific instructions below)
+- Podman installed and usable on Linux
 - **Optional:** Rust toolchain via [rustup](https://rust-lang.org/tools/install/).  
   See [Ferrocene Setup](#ferrocene-setup) on how to link Ferrocene with rustup.
 - `cargo install mantra --locked` (This requires a [modern native C compiler](https://docs.rs/cc/latest/cc/#compile-time-requirements) via the cc binary (usually clang or gcc))
@@ -17,60 +17,29 @@ This repository contains the accompanying demo for the [Safety-Critical Rust Dev
 - `cargo install embsinth --locked`
 - `probe-rs` following the official [installation section](https://probe.rs/docs/getting-started/installation/)
 
-### macOS
+### Linux
 
-To run docker container on macOS, you may install [lima](https://lima-vm.io).
-Follow [their documentation](https://lima-vm.io/docs/examples/containers/docker/) to use it as alias for docker commands:
+Install [Podman](https://podman.io/docs/installation) using the instructions for your distribution.
 
-```sh
-limactl start --mount-writable template:docker
-export DOCKER_HOST=$(limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')
-# To verify if it worked, run:
-docker run -d --name nginx -p 127.0.0.1:8080:80 nginx:alpine
-```
-
-**Note:** `limactl start --mount-writable template:docker` must only be run the first time. Afterwards, run `limactl start docker`.
-
-**WARN:** Setting `--mount-writable` makes the home directory writable from the container.
-This is needed to get raw LLVM coverage data during unit testing, but may pose security risks if other docker container are run.
-
-Once Lima and Docker are installed, try building the Dockerfile of this repository as described in section [QEMU Docker Container](#qemu-docker-container).
-
-### Windows
-
-For Windows users, Docker should be configured to use WSL 2 as documented in the official [docker documentation](https://docs.docker.com/desktop/features/wsl/).
-Once Docker is installed, try building the Dockerfile of this repository as described in section [QEMU Docker Container](#qemu-docker-container).
-
-To execute commands via [just](https://just.systems), replace the `justfile` with `windows.justfile`:
-
-```console
-> just --justfile windows.just
-```
-
-This file is configured to run commands via powershell.
-
-**Note:** If you get errors executing for example `just rad-unit-tests`, try to remove the `#!powershell` line at the top of the task.
-There seems to be an inconsistent handling of environmental variables with just on Windows.
 
 ## Facade Target Setup
 
 Ferrocene's [Facade targets](https://public-docs.ferrocene.dev/main/user-manual/rustc/testing-facades.html)
 allow to run regular Rust unit tests in an emulator of the CPU architecture of the actual target.
 
-### QEMU Docker Container
+### QEMU Container
 
 For convenience, the Dockerfile in this repository provides the needed `qemu-arm-static` binary to run `thumbv7em` binaries.
 
-**To build the image locally, run:**
+**To build the image locally on Linux, run:**
 
 ```sh
-docker buildx build --load -t ubuntu-qemu-arm .
+podman build -t localhost/ubuntu-qemu-arm .
 ```
 
-The workspace level `.cargo/config.toml` file is set up to use the Docker container as runner for the Facade target.
-The default configuration works for Linux and macOS, but must be changed for Windows hosts due to filepath incompatibilities.
+Podman stores the result in its local image storage by default, so no `--load` option is needed.
 
-**For Windows User:** Uncomment the runner configuration for Windows and comment the one for Linux and macOS.
+The workspace-level `.cargo/config.toml` file is set up to use the Podman container as runner for the Facade target on Linux.
 
 ### Ferrocene Setup
 
@@ -97,7 +66,7 @@ criticalup link create
 
 ### Running Unit Tests
 
-With Docker and the container set up and the prerequisites installed, you should be able to run:
+With Podman and the image set up and the prerequisites installed, you should be able to run:
 
 ```sh
 just rad-unit-tests

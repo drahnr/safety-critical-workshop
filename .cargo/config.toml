@@ -1,42 +1,9 @@
-# This works for Linux and macOS hosts
+# This works for Linux hosts
 [target."thumbv7em-ferrocene.facade-eabi"]
 runner = [
     "sh",
     "-c",
-    "docker run -v $HOME:$HOME -e LLVM_PROFILE_FILE=$LLVM_PROFILE_FILE --init --rm ubuntu-qemu-arm qemu-arm-static \"$@\"",
+    "podman run -v $HOME:$HOME -e LLVM_PROFILE_FILE=$LLVM_PROFILE_FILE --init --rm localhost/ubuntu-qemu-arm qemu-arm-static \"$@\"",
     "--",
 ]
 
-# # This works for Windows hosts
-# [target."thumbv7em-ferrocene.facade-eabi"]
-# runner = ["pwsh", "-NoProfile", "-NonInteractive", "-CommandWithArgs", '''
-#     $exe = $args[0]
-
-#     # Translate the native Windows path into the WSL mounted one
-#     $linuxExe = $exe.Replace('\', '/')
-#     if ($linuxExe -match '^([A-Za-z]):/(.*)$') {
-#         $linuxExe = "/mnt/" + $Matches[1].ToLower() + "/" + $Matches[2]
-#     }
-
-#     $linuxHome = $HOME.Replace('\', '/')
-#     if ($linuxHome -match '^([A-Za-z]):/(.*)$') {
-#         $linuxHome = "/mnt/" + $Matches[1].ToLower() + "/" + $Matches[2]
-#     }
-
-#     $programArgs = if ($args.Length -gt 1) {
-#         $args[1..($args.Length - 1)]
-#     } else {
-#         @()
-#     }
-
-#     docker run `
-#         --init `
-#         --rm `
-#         --mount "type=bind,source=$HOME,target=$linuxHome" `
-#         -e LLVM_PROFILE_FILE=$env:LLVM_PROFILE_FILE `
-#         ubuntu-qemu-arm `
-#         qemu-arm-static `
-#         "$linuxExe" @programArgs
-
-#     exit $LASTEXITCODE
-#     ''']
