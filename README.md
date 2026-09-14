@@ -218,8 +218,8 @@ The following debug probes were found:
 
 The output ID per probe is: `<vendor ID>:<probe ID>:<serial number>`
 
-Since vendor and probe ID should be the same for all DK devices,
-only the serial numbers for the **RAD** and **SIM** devices must be replaced in:
+Since vendor ID should be the same for all DK devices,
+only the serial numbers and maybe probe ID for the **RAD** and **SIM** devives must be replaced in:
 
 - `rad/.cargo/config.toml` using the number of the **RAD**
 - `sim/.cargo/config.toml` using the number of the **SIM**

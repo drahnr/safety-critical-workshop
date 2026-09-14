@@ -5,7 +5,7 @@ runner = [
   "probe-rs",
   "run",
   "--chip=nRF52840_xxAA",
-  "--probe=1366:1051:001050286871", # <- change the serial number to match the attached probe
+  "--probe=1366:1060:001050263183", # <- change the serial number to match the attached probe
   "--allow-erase-all",
   "--log-format=oneline",
 ]
